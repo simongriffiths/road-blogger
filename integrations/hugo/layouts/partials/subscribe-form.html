@@ -1,0 +1,57 @@
+{{/*
+  Partial: subscribe-form.html
+  Usage: {{ partial "subscribe-form.html" . }}
+  Drop into any Hugo layout or shortcode.
+  JS fetches to relative ORDS URL — same-origin, no CORS.
+*/}}
+<div class="subscribe-form" id="subscribe-form-wrapper">
+  <form id="subscribe-form" novalidate>
+
+    <div class="form-field">
+      <label for="sub-name">First name (optional)</label>
+      <input type="text"
+             id="sub-name"
+             name="first_name"
+             autocomplete="given-name"
+             placeholder="Your first name">
+    </div>
+
+    <div class="form-field">
+      <label for="sub-email">Email address <span aria-hidden="true">*</span></label>
+      <input type="email"
+             id="sub-email"
+             name="email"
+             autocomplete="email"
+             placeholder="you@example.com"
+             required>
+    </div>
+
+    {{/* Honeypot — hidden from humans, filled by bots */}}
+    <div style="display:none" aria-hidden="true">
+      <label for="sub-website">Website</label>
+      <input type="text"
+             id="sub-website"
+             name="website"
+             tabindex="-1"
+             autocomplete="off">
+    </div>
+
+    <div class="form-field form-consent">
+      <label>
+        <input type="checkbox" id="sub-consent" required>
+        I agree to receive a weekly newsletter.
+        See the <a href="/privacy" target="_blank">privacy policy</a>.
+      </label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" id="sub-submit">Subscribe</button>
+    </div>
+
+    {{/* Status message — shown by JS */}}
+    <div id="sub-status" role="alert" aria-live="polite"></div>
+
+  </form>
+</div>
+
+<script src="/js/subscribe.js"></script>
