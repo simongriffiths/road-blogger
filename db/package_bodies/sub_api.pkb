@@ -257,22 +257,22 @@ CREATE OR REPLACE PACKAGE BODY sub_api AS
 
         -- Add to suppression list
         MERGE INTO suppression_list tgt
-        USING (SELECT l_sub_id AS sid FROM DUAL) src
-        ON    (tgt.subscriber_id = src.sid)
-        WHEN NOT MATCHED THEN
-            INSERT (email, email_hash, reason, subscriber_id, suppressed_ts)
-            SELECT email,
+        USING (
+            SELECT subscriber_id,
+                   email,
                    LOWER(RAWTOHEX(
                        DBMS_CRYPTO.HASH(
                            UTL_I18N.STRING_TO_RAW(LOWER(email), 'AL32UTF8'),
                            DBMS_CRYPTO.HASH_SH256
                        )
-                   )),
-                   'UNSUBSCRIBED',
-                   subscriber_id,
-                   SYSTIMESTAMP
+                   )) AS email_hash
             FROM   subscribers
-            WHERE  subscriber_id = l_sub_id;
+            WHERE  subscriber_id = l_sub_id
+        ) src
+        ON    (tgt.subscriber_id = src.subscriber_id)
+        WHEN NOT MATCHED THEN
+            INSERT (email, email_hash, reason, subscriber_id, suppressed_ts)
+            VALUES (src.email, src.email_hash, 'UNSUBSCRIBED', src.subscriber_id, SYSTIMESTAMP);
 
         COMMIT;
         p_status := 'ok';

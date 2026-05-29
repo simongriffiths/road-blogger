@@ -188,6 +188,10 @@ CREATE OR REPLACE PACKAGE BODY sub_email AS
                            ELSE p_to_address
                        END;
 
+        IF SMTP_USERNAME IS NULL OR SMTP_PASSWORD IS NULL THEN
+            RETURN FALSE;
+        END IF;
+
         -- Open SMTP connection via OCI Email Delivery
         l_conn := UTL_SMTP.OPEN_CONNECTION(
                       host       => SMTP_HOST,
@@ -201,11 +205,11 @@ CREATE OR REPLACE PACKAGE BODY sub_email AS
         UTL_SMTP.STARTTLS(l_conn);
         UTL_SMTP.EHLO(l_conn, SMTP_HOST);
 
-        -- Authenticate using credential object
+        -- Authenticate using install-time OCI SMTP credentials.
         UTL_SMTP.AUTH(
             c          => l_conn,
-            username   => DBMS_CREDENTIAL.GET_USERNAME(SMTP_CRED),
-            password   => DBMS_CREDENTIAL.GET_PASSWORD(SMTP_CRED),
+            username   => SMTP_USERNAME,
+            password   => SMTP_PASSWORD,
             schemes    => 'LOGIN'
         );
 

@@ -18,7 +18,8 @@ CREATE OR REPLACE PACKAGE sub_email AS
     -- Frankfurt: smtp.email.eu-frankfurt-1.oci.oraclecloud.com
     SMTP_HOST     CONSTANT VARCHAR2(200) := 'smtp.email.uk-london-1.oci.oraclecloud.com';
     SMTP_PORT     CONSTANT PLS_INTEGER   := 587;
-    SMTP_CRED     CONSTANT VARCHAR2(100) := 'OCI_SMTP';   -- credential object name
+    SMTP_USERNAME CONSTANT VARCHAR2(4000) := NULL; -- install-time OCI SMTP username
+    SMTP_PASSWORD CONSTANT VARCHAR2(4000) := NULL; -- install-time OCI SMTP password
 
     -- Sender identity — must match OCI approved sender
     FROM_ADDRESS  CONSTANT VARCHAR2(320) := 'newsletter@yourdomain.com';
