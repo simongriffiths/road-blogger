@@ -56,7 +56,7 @@ fi
 # Map the logical environment to its saved SQLcl connection.
 case "${ENV_NAME}" in
   dev)
-    CONNECTION="app_dev"
+    CONNECTION="road_blogger_dev"
     ;;
   test)
     CONNECTION="app_test"
